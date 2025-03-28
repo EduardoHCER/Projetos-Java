@@ -4,7 +4,7 @@ class Agenda {
     public static void main(String[] args) {
 
         Scanner input = new Scanner(System.in);
-        int tamanho = 2;
+        int tamanho = 10; /*  Tamanho da "Agenda" */ 
         Contato[] contato = new Contato[tamanho];
 
         int numContatos = 0;
@@ -24,42 +24,22 @@ class Agenda {
             switch (opcao) {
                 /* Adicionar contato */
                 case 1:
-                    if (numContatos < tamanho) 
-                    {
-                        for (int i = 0; i < numContatos; i++) {
+                    /*  Verificação para agenda cheia. */
+                    if (numContatos < tamanho) {
 
-                            if (contato[i].getNome() == null) {
+                        System.out.print("Informe nome: ");
+                        String nome = input.nextLine();
 
-                                System.out.print("Informe nome: ");
-                                String nome = input.nextLine();
+                        System.out.println("Informe o numero: ");
+                        String fone = input.nextLine();
 
-                                System.out.println("Informe o numero: ");
-                                String fone = input.nextLine();
+                        contato[numContatos] = new Contato(nome, fone);
 
-                                contato[numContatos] = new Contato(nome, fone);
+                        System.out.println("Contato cadastrado com sucesso!\n");
 
-                                System.out.println("Contato cadastrado com sucesso!\n");
+                        numContatos++;
 
-                                numContatos++;
-                            }
-                            else{
-
-                                System.out.print("Informe nome: ");
-                                String nome = input.nextLine();
-
-                                System.out.println("Informe o numero: ");
-                                String fone = input.nextLine();
-
-                                contato[numContatos] = new Contato(nome, fone);
-
-                                System.out.println("Contato cadastrado com sucesso!\n");
-
-                                numContatos++;
-                            }
-                        }
-                    } 
-                    else 
-                    {
+                    } else {
                         System.out.print("Agenda cheia!");
                     }
                     break;
@@ -69,13 +49,22 @@ class Agenda {
 
                     System.out.print("Nome do contato: ");
                     String busca = input.nextLine();
+                    
+                    /* Variavel para imprimir de forma certa a msg caso nao encontre */
+                    boolean encontradoBusca = false;
 
                     for (int i = 0; i < numContatos; i++) {
                         if (contato[i].getNome().equalsIgnoreCase(busca)) {
                             System.out.println("Contato encontrado!");
                             System.out.print("Nome: " + contato[i].getNome());
                             System.out.print("Numero: " + contato[i].getFone());
+
+                            encontradoBusca = true;
                         }
+                    }
+
+                    if (!encontradoBusca) {
+                        System.out.println("Contato nao encontrado!");
                     }
 
                     break;
@@ -86,33 +75,50 @@ class Agenda {
                     System.out.println("Nome do contato: ");
                     String nomeBusca = input.nextLine();
 
+                    /* Variavel para imprimir de forma certa a msg caso nao encontre */
+                    boolean encontradoEditar = false;
+
                     for (int i = 0; i < numContatos; i++) {
                         if (contato[i].getNome().equalsIgnoreCase(nomeBusca)) {
 
                             System.out.println("Digite o novo numero: ");
                             String novoNumero = input.nextLine();
-
+                            /* Nova 'Var' para salvar novo numero do contato. */
                             contato[i].setFone(novoNumero);
-                        } else {
-                            System.out.println("Contato nao encontrado!");
+                            encontradoEditar = true;
                         }
+                    }
+
+                    if (!encontradoEditar) {
+                        System.out.println("Contato nao encontrado!");
                     }
 
                     break;
 
                 /* Excluir contato */
                 case 4:
-
                     System.out.print("Nome do contato: ");
                     String excluir = input.nextLine();
 
+                    /* Variavel para imprimir de forma certa a msg caso nao encontre */
+                    boolean contatoExcluido = false;
+
                     for (int i = 0; i < numContatos; i++) {
                         if (contato[i].getNome().equalsIgnoreCase(excluir)) {
-                            contato[i].setNome(null);
-                            contato[i].setFone(null);
+                            /*  Loop para sobrepor o contato excluido, o mover todos os contatos da agenda para a casa anterior  */
+                            for (int j = i; j < numContatos - 1; j++) {
+                                contato[j] = contato[j + 1];
+                            }
+                            numContatos--; /* Reduz o contador de contatos */
+                            contatoExcluido = true;
+                            System.out.println("Contato excluído com sucesso!");
+                            break;
                         }
                     }
 
+                    if (!contatoExcluido) {
+                        System.out.println("Contato não encontrado!");
+                    }
                     break;
 
                 /* Listar contatos */
@@ -131,7 +137,7 @@ class Agenda {
                 /* Sair */
                 case 6:
                     input.close();
-                    break;
+                    return;
 
                 default:
                     System.out.println("Opcao invalida!\n");
@@ -140,7 +146,7 @@ class Agenda {
     }
 }
 
-// ====================CLASSE CONTATO===============================
+/*  ===================================CLASSE CONTATO=============================== */
 class Contato {
     private String nome, fone;
 
