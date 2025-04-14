@@ -1,0 +1,72 @@
+import java.time.Duration;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
+
+
+class Estacionamento {
+	public static void main(String[] args) {
+
+		Scanner sc = new Scanner(System.in);
+
+		/* Setar fuso horário para São Paulo */
+		LocalTime agora = LocalTime.now(ZoneId.of("America/Sao_Paulo"));
+
+		/* Formato de 24 horas */
+		DateTimeFormatter formato = DateTimeFormatter.ofPattern("HH:mm");
+
+		System.out.println("Digite as informações do veiculo: ");
+		System.out.println("Placa: ");
+		String placa = sc.nextLine();
+		System.out.println("Digite a hora de entrada (hh:mm): ");
+		String horaString = sc.nextLine();
+		System.out.println("Digite o horario de saída (hh:mm): ");
+		String hora_saidaString = sc.nextLine();
+
+		/* Convertendo string's para Local Time. */
+		LocalTime hora = LocalTime.parse(horaString, formato);
+		LocalTime hora_saida = LocalTime.parse(hora_saidaString, formato);
+
+		/* Formatando os horarios em LocalTime. */
+		String horaE = hora.format(formato);
+		String horaS = hora_saida.format(formato);
+
+		Duration diferenca = Duration.between(hora, hora_saida);
+
+		long minutos = diferenca.toMinutes();
+
+		System.out.println("Hora de entrada: " + horaE + ", Hora de saida: " + horaS);
+
+		/* Calculo valor a pagar */
+		double valortotal = 0;
+
+		valortotal += 5;
+
+		if (minutos > 60) {
+			valortotal += 5;
+			double blocos = minutos - 60;
+			blocos = minutos / 15;
+			double arredondo = Math.ceil(blocos);
+			valortotal += arredondo * 2;
+			
+
+		}
+
+		System.out.println();
+		System.out.println("-----------------------------------");
+		System.out.println("Recibo");
+		System.out.println("-----------------------------------");
+		System.out.println("Placa: " + placa);
+		System.out.println("Entrada: " + horaE);
+		System.out.println("Saida: " + horaS);
+		System.out.println("Tempo total (minutos): " + minutos);
+		System.out.println("Valor total a pagar: R$" + valortotal);
+		System.out.println("-----------------------------------");
+
+		
+		
+	}
+	
+	
+}
